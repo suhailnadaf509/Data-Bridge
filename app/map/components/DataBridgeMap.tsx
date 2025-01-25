@@ -48,7 +48,7 @@ const DataBridgeMap = ({
 
   // Replace with your actual Google Maps API key
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.googlemap_apikey || "",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLEMAPS_APIKEY || "",
     libraries: ["places"],
   });
 
