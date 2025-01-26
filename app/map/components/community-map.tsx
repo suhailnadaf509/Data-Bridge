@@ -50,8 +50,11 @@ const CommunityMap = ({
     timestamp: string;
   }>;
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedResource, setSelectedResource] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -84,6 +87,7 @@ const CommunityMap = ({
 
   const renderInfoWindow = (
     type: "resource" | "event" | "notification",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     item: any
   ) => {
     switch (type) {
