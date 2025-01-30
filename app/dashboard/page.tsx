@@ -50,7 +50,8 @@ export default function Dashboard() {
         <div className="mb-8">
           <h2 className="text-2xl font-bold">Welcome back, Jane! 👋</h2>
           <p className="text-muted-foreground">
-            Your community is active today. Here's what's happening around you.
+            Your community is active today. Here&apos;s what&apos;s happening
+            around you.
           </p>
         </div>
 
@@ -169,8 +170,9 @@ export default function Dashboard() {
                     <CardContent>
                       <p className="text-sm">
                         Lost golden retriever near Central Park. Responds to
-                        "Max". Please call if spotted!
+                        &quot;Max&quot;. Please call if spotted!
                       </p>
+
                       <div className="mt-2 flex items-center gap-4">
                         <Button variant="ghost" size="sm" className="h-8">
                           <Heart className="mr-2 h-4 w-4" /> Help Search
