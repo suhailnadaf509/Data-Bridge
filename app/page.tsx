@@ -7,7 +7,6 @@ import { Building2, MapPin, Menu, Search } from "lucide-react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { signIn, signOut } from "next-auth/react";
-import { metadata } from "./metadata"; // Import metadata
 
 export default function LandingPage() {
   const { data: session } = useSession();
