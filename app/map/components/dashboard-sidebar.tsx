@@ -21,7 +21,7 @@ interface DashboardSidebarProps {
   onFilterChange: (filters: Partial<FilterState>) => void;
 }
 
-export default function DashboardSidebar({
+export default function DashboardSidebar ({
   filters,
   onFilterChange,
 }: DashboardSidebarProps) {
