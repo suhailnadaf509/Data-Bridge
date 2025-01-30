@@ -12,3 +12,416 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model User {
+  id        String   @id @default(cuid())
+
+  firstName String
+  lastName  String
+  provider   Provider
+  phone     String?
+
+  address    Address? @relation(fields: [addressId], references: [id])
+  addressId  String?  
+  occupation String
+  @@map("users")}
+
+model Address {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  address1 String
+  address2 String?
+  city     String
+  state    String
+  zip      String
+  country  String}
+//resources
+model Resource {
+  id          String    @id @default(cuid())
+  name        String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  address     Address?
+  contact     Contact?
+  description String
+  website     String?
+  hours       Hours[]
+  services    String[]
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  resources   Resource[]
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  street     String
+  city       String
+  state      String
+  zipCode    String
+  latitude   Float?
+  longitude  Float?
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId String   @unique
+}
+
+model Contact {
+  id          String   @id @default(cuid())
+  phone       String?
+  email       String?
+  contactName String?
+  resource    Resource @relation(fields: [resourceId], references: [id])
+  resourceId  String   @unique
+}
+
+model Hours {
+  id          String   @id @default(cuid())
+  dayOfWeek   Int      // 0-6 representing Sunday-Saturday
+  openTime    DateTime
+  closeTime   DateTime
+  resource    Resource @relation(fields: [resourceId], references: [id])
+  resourceId  String
+}  
+// Community Board Schema
+
+model Post {
+  id          String      @id @default(cuid())
+  title       String
+  content     String      @db.Text
+  type        PostType
+  status      PostStatus  @default(ACTIVE)
+  pinned      Boolean     @default(false)
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  comments    Comment[]
+  likes       Like[]
+  attachments Attachment[]
+  tags        Tag[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  content   String    @db.Text
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  parentId  String?
+  replies   Comment[] @relation("CommentReplies")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model User {
+  id          String    @id @default(cuid())
+  username    String    @unique
+  email       String    @unique
+  password    String
+  role        UserRole  @default(MEMBER)
+  avatar      String?
+  posts       Post[]
+  comments    Comment[]
+  likes       Like[]
+  isVerified  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  slug        String    @unique
+  posts       Post[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  posts       Post[]
+  createdAt   DateTime  @default(now())
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  url       String
+  filename  String
+  type      String
+  size      Int  password    String
+
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  createdAt DateTime @default(now())
+}
+
+enum PostType {
+  ANNOUNCEMENT
+  EVENT
+  DISCUSSION
+  QUESTION
+}
+
+enum PostStatus {
+  ACTIVE
+  ARCHIVED
+  REPORTED
+  DELETED
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum Provider{
+  Google
+  GitHub
+}
+model PetSighting {
+  id            String          @id @default(cuid())
+  type          SightingType    // LOST, FOUND, STRAY
+  status        SightingStatus  @default(ACTIVE)
+  petType       PetType
+  breed         String?
+  color         String[]
+  size          PetSize
+  name          String?         // If known (mainly for lost pets)
+  description   String          @db.Text
+  features      String[]        // Distinctive marks, behaviors, etc.
+  collarDetails String?
+  microchipped  Boolean?
+  
+  // Location details
+  lastSeen      DateTime
+  location      String
+  latitude      Float?
+  longitude     Float?
+  
+  // Media
+  images        PetImage[]
+  
+  // Relations
+  reporter      User            @relation(fields: [reporterId], references: [id])
+  reporterId    String
+  updates       SightingUpdate[]
+  matches       PetMatch[]
+  
+  // Contact preferences
+  contactMethod ContactMethod   @default(EITHER)
+  contactPhone  String?
+  contactEmail  String?
+  
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model PetImage {
+  id          String      @id @default(cuid())
+  url         String
+  filename    String
+  sighting    PetSighting @relation(fields: [sightingId], references: [id], onDelete: Cascade)
+  sightingId  String  password    String
+
+  createdAt   DateTime    @default(now())
+}
+
+model SightingUpdate {
+  id          String      @id @default(cuid())
+  content     String      @db.Text
+  sighting    PetSighting @relation(fields: [sightingId], references: [id], onDelete: Cascade)
+  sightingId  String
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String
+  createdAt   DateTime    @default(now())
+}
+
+model PetMatch {
+  id              String      @id @default(cuid())
+  originalSighting PetSighting @relation(fields: [sightingId], references: [id])
+  sightingId      String
+  matchedPostId   String      // ID of another sighting that might be a match
+  status          MatchStatus @default(SUGGESTED)
+  notes           String?     @db.Text
+  createdBy       User        @relation(fields: [createdById], references: [id])
+  createdById     String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+enum SightingType {
+  LOST    // Pet that has gone missing
+  FOUND   // Pet that someone has found/secured
+  STRAY   // Stray animal sighting
+}
+
+enum SightingStatus {
+  ACTIVE
+  RESOLVED
+  EXPIRED
+}
+
+enum PetType {
+  DOG
+  CAT
+  BIRD
+  RABBIT
+  HAMSTER
+  GUINEA_PIG
+  FERRET
+  REPTILE
+  OTHER
+}
+
+enum PetSize {
+  VERY_SMALL // < 5 lbs
+  SMALL      // 5-15 lbs
+  MEDIUM     // 15-40 lbs
+  LARGE      // 40-90 lbs
+  VERY_LARGE // 90+ lbs
+}
+
+enum MatchStatus {
+  SUGGESTED
+  CONFIRMED
+  REJECTED
+}
+
+enum ContactMethod {
+  PHONE
+  EMAIL
+  EITHER
+}
+
+// Add these relations to your existing User model
+model User {
+  // ... existing User fields ...
+  petSightings    PetSighting[]
+  sightingUpdates SightingUpdate[]
+  petMatches      PetMatch[]
+}
+// Community Reports Schema
+
+model Report {
+  id            String        @id @default(cuid())
+  type          ReportType
+  status        ReportStatus  @default(PENDING)
+  priority      Priority      @default(MEDIUM)
+  title         String
+  description   String        @db.Text
+  location      String?
+  evidence      Evidence[]
+  updates       ReportUpdate[]
+  reporter      User          @relation("ReportedBy", fields: [reporterId], references: [id])
+  reporterId    String
+  assignedTo    User?         @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedToId  String?
+  relatedPost   Post?         @relation(fields: [postId], references: [id])
+  postId        String?
+  category      ReportCategory @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  isAnonymous   Boolean       @default(false)
+  resolution    String?       @db.Text
+  resolvedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model ReportCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  reports     Report[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ReportUpdate {
+  id          String    @id @default(cuid())
+  content     String    @db.Text
+  report      Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  createdAt   DateTime  @default(now())
+}
+
+model Evidence {
+  id          String    @id @default(cuid())
+  type        String    // e.g., "image", "document", "video"
+  url         String
+  filename    String
+  description String?
+  report      Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId    String
+  uploadedBy  User      @relation(fields: [uploadedById], references: [id])
+  uploadedById String
+  createdAt   DateTime  @default(now())
+}
+
+enum ReportType {
+  SAFETY_CONCERN
+  MAINTENANCE
+  NOISE_COMPLAINT
+  SUSPICIOUS_ACTIVITY
+  HARASSMENT
+  CONTENT_VIOLATION
+  PROPERTY_DAMAGE
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  IN_REVIEW
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+  ARCHIVED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Add these relations to your existing User model
+model User {
+  // ... existing User fields ...
+  reportsSubmitted Report[]     @relation("ReportedBy")
+  reportsAssigned  Report[]     @relation("AssignedTo")
+  reportUpdates    ReportUpdate[]
+  evidenceUploaded Evidence[]
+}
+
+// Add this relation to your existing Post model
+model Post {
+  // ... existing Post fields ...
+  reports Report[]
+}
