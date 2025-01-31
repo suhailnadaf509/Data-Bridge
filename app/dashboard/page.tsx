@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bell,
   Heart,
@@ -22,8 +22,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getSession } from "next-auth/react";
 
 export default function Dashboard() {
+  const [userName, setUserName] = useState<string>("");
+  const fetchuserdata = async () => {
+    try {
+      const session = await getSession();
+      if (session?.user) {
+        setUserName(session.user.email || "user");
+      }
+    } catch (error) {
+      console.error("error fetching session data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchuserdata();
+  }, []);
+
+  const usernames = userName.split("@")[0];
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
@@ -48,7 +65,7 @@ export default function Dashboard() {
       <main className="container px-4 py-6">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold">Welcome back, Jane! 👋</h2>
+          <h2 className="text-2xl font-bold">Welcome back, {usernames}! 👋</h2>
           <p className="text-muted-foreground">
             Your community is active today. Here&apos;s what&apos;s happening
             around you.
@@ -113,7 +130,7 @@ export default function Dashboard() {
               <MessageCircle className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <Link href="/community" className="text-2xl font-bold">
+              <Link href="/community_page" className="text-2xl font-bold">
                 8 New Posts
               </Link>
               <p className="text-xs text-muted-foreground">
