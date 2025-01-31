@@ -14,6 +14,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Navigation */}
+
       <nav className="border-b border-zinc-800">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

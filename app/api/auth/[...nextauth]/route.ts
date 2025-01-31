@@ -1,3 +1,4 @@
+import { prismaClient } from "@/lib/db";
 import NextAuth from "next-auth";
 import { DefaultSession, DefaultUser } from "next-auth";
 import "next-auth/jwt";
@@ -31,18 +32,46 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async signIn({ user }) {
+      if (!user.email) {
+        return false;
+      }
+      try {
+        const existingUser = await prismaClient.user.findUnique({
+          where: { email: user.email },
+        });
+        if (!existingUser) {
+          const newUser = await prismaClient.user.create({
+            data: {
+              email: user.email,
+              provider: "GOOGLE",
+              username: user.email,
+              password: "",
+            },
+          });
+          user.id = newUser.id;
+        } else {
+          user.id = existingUser.id;
+        }
+      } catch (error) {
+        console.error("error during sign in :", error);
+        return false;
+      }
+      return true;
+    },
+
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id ?? token.sub ?? ""
+        token.id = user.id ?? token.sub ?? "";
       }
-      return token
+      return token;
     },
     // Modified session callback
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id
+        session.user.id = token.id;
       }
-      return session
+      return session;
     },
   },
 });
