@@ -47,7 +47,7 @@ const ChatComponent = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "black", color: "white" }}>
       {messages.map((message) => (
         <div key={message.id}>
           <strong>{message.user_id}:</strong> {message.message}
