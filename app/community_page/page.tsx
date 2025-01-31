@@ -1,5 +1,5 @@
 "use client";
-
+import ChatComponent from "./components/ChatComponent";
 import { useState } from "react";
 import Post from "./components/post";
 import CreatePostForm from "./components/createpostform";
@@ -12,7 +12,19 @@ interface PostData {
   content: string;
   imagePath?: string;
 }
+import { supabase } from "../../lib/supabaseClient";
 
+const sendMessage = async (userId: string, message: string) => {
+  const { data, error } = await supabase
+    .from("messages")
+    .insert([{ user_id: userId, message }]);
+
+  if (error) {
+    console.error("Error sending message:", error);
+  } else {
+    console.log("Message sent:", data);
+  }
+};
 export default function Home() {
   const [currentUser, setCurrentUser] = useState("John Doe"); // Simulating a logged-in user
   const [posts, setPosts] = useState<PostData[]>([
@@ -45,6 +57,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-gray-300">
+      <ChatComponent />
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-gray-100">
           Community Board
