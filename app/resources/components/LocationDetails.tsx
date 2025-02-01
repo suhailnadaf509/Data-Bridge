@@ -31,7 +31,7 @@ export default function LocationDetails({ location }: LocationDetailsProps) {
     <div className="mt-4">
       <h4 className="text-lg font-semibold mb-2 text-gray-100">Reviews</h4>
       {reviews.map((review) => (
-        <div key={review.id} className="mb-2 p-2 bg-light-gray rounded">
+        <div key={review.id} className="mb-2 p-2 bg-[#3a3a3a] rounded">
           <div className="flex items-center">
             <Star className="w-4 h-4 text-yellow-400 mr-1" />
             <span className="text-gray-100">{review.rating}</span>
@@ -48,7 +48,7 @@ export default function LocationDetails({ location }: LocationDetailsProps) {
           <select
             value={newReview.rating}
             onChange={(e) => setNewReview({ ...newReview, rating: Number.parseInt(e.target.value) })}
-            className="mt-1 block w-full rounded-md bg-light-gray border-gray-600 text-gray-100 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md bg-[#3a3a3a] border-gray-600 text-gray-100 shadow-sm focus:border-[#5a5a5a] focus:ring focus:ring-[#5a5a5a] focus:ring-opacity-50"
           >
             {[1, 2, 3, 4, 5].map((rating) => (
               <option key={rating} value={rating}>
@@ -62,15 +62,15 @@ export default function LocationDetails({ location }: LocationDetailsProps) {
           <textarea
             value={newReview.comment}
             onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-            className="mt-1 block w-full rounded-md bg-light-gray border-gray-600 text-gray-100 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md bg-[#3a3a3a] border-gray-600 text-gray-100 shadow-sm focus:border-[#5a5a5a] focus:ring focus:ring-[#5a5a5a] focus:ring-opacity-50"
             rows={3}
           ></textarea>
         </div>
-        <button type="submit" className="bg-accent text-white px-4 py-2 rounded hover:bg-light-gray">
+        <button type="submit" className="bg-[#5a5a5a] text-white px-4 py-2 rounded hover:bg-[#6a6a6a]">
           Add Review
         </button>
       </form>
-      <button onClick={handleNotifyOwner} className="mt-4 bg-accent text-white px-4 py-2 rounded hover:bg-light-gray">
+      <button onClick={handleNotifyOwner} className="mt-4 bg-[#5a5a5a] text-white px-4 py-2 rounded hover:bg-[#6a6a6a]">
         Notify Owner
       </button>
     </div>

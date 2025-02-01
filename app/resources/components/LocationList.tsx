@@ -20,7 +20,7 @@ export default function LocationList({ category }: LocationListProps) {
       {category.locations.length > 0 ? (
         <ul className="space-y-4">
           {category.locations.map((location) => (
-            <li key={location.id} className="bg-dark-gray shadow rounded-lg p-4">
+            <li key={location.id} className="bg-[#2a2a2a] shadow rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-100">{location.name}</h3>
@@ -34,7 +34,7 @@ export default function LocationList({ category }: LocationListProps) {
               </div>
               <button
                 onClick={() => toggleLocation(location.id)}
-                className="mt-2 text-accent flex items-center hover:text-gray-300"
+                className="mt-2 text-[#5a5a5a] flex items-center hover:text-gray-300"
               >
                 {expandedLocation === location.id ? (
                   <>

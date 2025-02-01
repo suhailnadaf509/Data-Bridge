@@ -1,4 +1,4 @@
-import type { Category } from "../data/LocalResources"
+import type { Category } from "../data/localResources"
 
 interface CategoryListProps {
   categories: Category[]
@@ -17,8 +17,8 @@ export default function CategoryList({ categories, onSelectCategory, selectedCat
               onClick={() => onSelectCategory(category)}
               className={`w-full text-left px-4 py-2 rounded ${
                 selectedCategory?.id === category.id
-                  ? "bg-accent text-white"
-                  : "bg-dark-gray text-gray-300 hover:bg-light-gray"
+                  ? "bg-[#5a5a5a] text-white"
+                  : "bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]"
               }`}
             >
               {category.name}
