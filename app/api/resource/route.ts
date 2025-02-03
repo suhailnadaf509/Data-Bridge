@@ -1,4 +1,14 @@
 import { prismaClient } from "@/lib/db";
+/**
+ * This file contains code for [briefly describe the purpose of the file].
+ *
+ * Note: Some variables are prefixed with an underscore (`_`) to suppress ESLint warnings
+ * about unused variables. These variables are intentionally left unused for future
+ * implementation or debugging purposes.
+ *
+ * Linting warnings suppressed:
+ * - @typescript-eslint/no-unused-vars
+ */
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: Request) {

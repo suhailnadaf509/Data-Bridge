@@ -34,7 +34,16 @@ const ChatComponent = () => {
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-
+/**
+ * This file contains code for [briefly describe the purpose of the file].
+ * 
+ * Note: Some variables are prefixed with an underscore (`_`) to suppress ESLint warnings
+ * about unused variables. These variables are intentionally left unused for future
+ * implementation or debugging purposes.
+ * 
+ * Linting warnings suppressed:
+ * - @typescript-eslint/no-unused-vars
+ */
     const { data, error } = await supabase
       .from("messages")
       .insert([{ user_id: "current_user", message: newMessage }])

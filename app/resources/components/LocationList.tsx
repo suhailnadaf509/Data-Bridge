@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Category } from "../data/localResources";
 import { Star, ChevronDown, ChevronUp } from "lucide-react";
 import LocationDetails from "./LocationDetails";
-import { useEffect } from "react";
+
 
 interface LocationListProps {
   category: Category;
