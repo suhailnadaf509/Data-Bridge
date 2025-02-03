@@ -1,15 +1,17 @@
 import { prismaClient } from "@/lib/db";
-/**
- * This file contains code for [briefly describe the purpose of the file].
- *
- * Note: Some variables are prefixed with an underscore (`_`) to suppress ESLint warnings
- * about unused variables. These variables are intentionally left unused for future
- * implementation or debugging purposes.
- *
- * Linting warnings suppressed:
- * - @typescript-eslint/no-unused-vars
- */
 import { NextResponse, NextRequest } from "next/server";
+
+export async function GET() {
+  try {
+    const fetchresource = await prismaClient.resource.findMany();
+    return NextResponse.json(fetchresource);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "failed to fetch resources " },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -20,56 +22,18 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const {
-      id,
-      name,
-      type,
-      description,
-      website,
-      isActive,
-      address,
-      city,
-      state,
-      zipCode,
-      latitude,
-      longitude,
-      phone,
-      email,
-      contactName,
-      createdAt,
-      updatedAt,
-      manager,
-      category,
-    } = resources;
+    const { name, type, description, address, city, state, zipCode } =
+      resources;
 
     const newresource = await prismaClient.resource.create({
       data: {
-        id,
         name,
         type,
         description,
-        website,
-        isActive,
-
-        // Location
         address,
         city,
         state,
         zipCode,
-        latitude,
-        longitude,
-
-        // Contact
-        phone,
-        email,
-        contactName,
-
-        // Relations
-
-        createdAt,
-        updatedAt,
-        manager,
-        category,
       },
     });
 

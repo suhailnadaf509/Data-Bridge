@@ -100,10 +100,10 @@ model Resource {
   contactName String?
   
   // Relations
-  manager     User      @relation(fields: [managerId], references: [id])
-  managerId   String
-  category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  String
+  manager     User?      @relation(fields: [managerId], references: [id])
+  managerId   String?
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?
   hours       Hours[]
   services    String[]
   
