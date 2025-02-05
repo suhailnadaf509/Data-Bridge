@@ -11,7 +11,6 @@ export default function Home() {
       <div
         className={`${inter.className} bg-[#0A0A0A] text-gray-300 min-h-screen`}
       >
-        <ChatComponent />
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6 text-gray-100">
             Community Board

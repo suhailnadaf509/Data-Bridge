@@ -2,6 +2,10 @@
 
 import { writeFile } from "fs/promises";
 import { join } from "path";
+import { mkdir } from "fs";
+import { promisify } from "util";
+
+const mkdirAsync = promisify(mkdir);
 
 export async function createPost(formData: FormData) {
   const title = formData.get("title") as string;
@@ -16,11 +20,19 @@ export async function createPost(formData: FormData) {
   let imagePath = "";
 
   if (image) {
-    const bytes = await image.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const uploadsDir = join("public", "uploads");
 
-    const path = join("public", "uploads", image.name);
-    await writeFile(path, buffer);
+    // Ensure the uploads directory exists
+    try {
+      await mkdirAsync(uploadsDir, { recursive: true });
+    } catch (error) {
+      console.error("Error creating uploads directory:", error);
+      return;
+    }
+
+    const path = join(uploadsDir, image.name);
+    const buffer = await image.arrayBuffer();
+    await writeFile(path, Buffer.from(buffer));
     imagePath = `/uploads/${image.name}`;
   }
 

@@ -15,7 +15,7 @@ import { ThumbsUp, ThumbsDown, Trash2 } from "lucide-react";
 
 interface PostProps {
   id: string;
-  author: string;
+  user_id: string;
   title: string;
   content: string;
   imagePath?: string;
@@ -25,7 +25,7 @@ interface PostProps {
 
 export default function Post({
   id,
-  author,
+  user_id,
   title,
   content,
   imagePath,
@@ -35,7 +35,7 @@ export default function Post({
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
-  const isAuthor = author === currentUser;
+  const isAuthor = user_id === currentUser;
 
   return (
     <Card className="bg-[#1E1E1E] text-gray-300 mb-4 border-[#2A2A2A]">
@@ -44,9 +44,9 @@ export default function Post({
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage
-                src={`https://api.dicebear.com/6.x/initials/svg?seed=${author}`}
+                src={`https://api.dicebear.com/6.x/initials/svg?seed=${user_id}`}
               />
-              <AvatarFallback>{author[0]}</AvatarFallback>
+              <AvatarFallback>{user_id[0]}</AvatarFallback>
             </Avatar>
             <CardTitle className="text-gray-100">{title}</CardTitle>
           </div>
@@ -95,7 +95,7 @@ export default function Post({
             <ThumbsDown className="mr-2 h-4 w-4" /> {dislikes}
           </Button>
         </div>
-        <span className="text-sm text-gray-500">Posted by {author}</span>
+        <span className="text-sm text-gray-500">Posted by {user_id}</span>
       </CardFooter>
     </Card>
   );

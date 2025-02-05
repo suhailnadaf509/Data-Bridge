@@ -7,46 +7,33 @@ interface Message {
   message: string;
   created_at: string;
 }
-
+import { getSession } from "next-auth/react";
 const ChatComponent = () => {
   // Initialize state with hardcoded messages
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      user_id: "user1",
-      message: "Hello, world!",
-      created_at: "2023-10-01T12:00:00Z",
-    },
-    {
-      id: "2",
-      user_id: "user2",
-      message: "Hi there!",
-      created_at: "2023-10-01T12:05:00Z",
-    },
-    {
-      id: "3",
-      user_id: "user1",
-      message: "How are you?",
-      created_at: "2023-10-01T12:10:00Z",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userName, setUserName] = useState<string>("");
+  const fetchuserdata = async () => {
+    try {
+      const session = await getSession();
 
+      if (session?.user) {
+        setUserName(session.user.email || "user");
+      }
+    } catch (error) {
+      console.error("error fetching session data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchuserdata();
+  }, []);
+  const usernames = userName.split("@")[0];
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-/**
- * This file contains code for [briefly describe the purpose of the file].
- * 
- * Note: Some variables are prefixed with an underscore (`_`) to suppress ESLint warnings
- * about unused variables. These variables are intentionally left unused for future
- * implementation or debugging purposes.
- * 
- * Linting warnings suppressed:
- * - @typescript-eslint/no-unused-vars
- */
+
     const { data, error } = await supabase
       .from("messages")
-      .insert([{ user_id: "current_user", message: newMessage }])
+      .insert([{ user_id: usernames, message: newMessage }])
       .select();
 
     if (error) {
@@ -108,6 +95,7 @@ const ChatComponent = () => {
       }}
     >
       <p>Chat Room</p>
+      <p>Username: {usernames}</p>
       {messages.map((message) => (
         <div key={message.id} style={{ marginBottom: "8px" }}>
           <strong>{message.user_id}:</strong> {message.message}
@@ -120,7 +108,7 @@ const ChatComponent = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           style={{ color: "black", marginRight: "8px" }}
         />
-        <button onClick={sendMessage} style={{ color: "black" }}>
+        <button onClick={sendMessage} style={{ color: "white" }}>
           Send
         </button>
       </div>
